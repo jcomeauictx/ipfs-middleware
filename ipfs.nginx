@@ -1,0 +1,8 @@
+server {
+	listen 80;
+	server-name ipfs.io;
+	location / {
+		include uwsgi-params;
+		uwsgi-pass unix:/tmp/ipfsmiddleware.sock;
+	}
+}

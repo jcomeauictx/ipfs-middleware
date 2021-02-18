@@ -2,13 +2,13 @@
 '''
 Implement simple IPFS server
 '''
-import sys, os, subprocess, logging, posixpath
-from http import HTTPStatus
-from http.server import HTTPServer, SimpleHTTPRequestHandler
+import sys, os, subprocess, logging, posixpath, http.server
+from http.server import HTTPServer, HTTPStatus, SimpleHTTPRequestHandler
 
 logging.basicConfig(level=logging.DEBUG if __debug__ else logging.INFO)
 
 CACHE = os.path.expanduser('~/.ipfsserver/cache')
+PORT = 8088
 
 class IPFSRequestHandler(SimpleHTTPRequestHandler):
     '''
@@ -56,11 +56,11 @@ def run(server_class=HTTPServer, handler_class=IPFSRequestHandler):
     '''
     Instantiate and run server
     '''
-    server_address = ('', 8088)
+    server_address = ('', PORT)
     httpd = server_class(server_address, handler_class)
-    # make text/plain the default
-    SimpleHTTPRequestHandler.extensions_map[''] = 'text/plain'
     httpd.serve_forever()
 
 if __name__ == '__main__':
-    run()
+    # make text/plain the default
+    SimpleHTTPRequestHandler.extensions_map[''] = 'text/plain'
+    http.server.test(IPFSRequestHandler, HTTPServer, 'HTTP/1.1', PORT)

@@ -3,6 +3,7 @@
 Implement simple IPFS server
 '''
 import sys, os, http.server
+from http import HTTPStatus
 from io import BytesIO
 
 class IPFSRequestHandler(http.server.SimpleHTTPRequestHandler):
@@ -20,6 +21,7 @@ class IPFSRequestHandler(http.server.SimpleHTTPRequestHandler):
         Fetch file before continuing
         '''
         path = self.translate_path(self.path)
+        self.send_response(HTTPStatus.OK)
         self.send_header('Content-type', 'text/plain')
         self.end_headers()
         if not head_only:

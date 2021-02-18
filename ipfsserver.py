@@ -21,6 +21,8 @@ class IPFSRequestHandler(http.server.SimpleHTTPRequestHandler):
         os.makedirs(CACHE, exist_ok=True)
         kwargs['directory'] = CACHE
         super().__init__(*args, **kwargs)
+        # make text/plain the default
+        self.extensions_map[''] = 'text/plain'
 
     def do_GET(self, head_only=False):
         '''

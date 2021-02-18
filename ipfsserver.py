@@ -6,6 +6,8 @@ import sys, os, http.server
 from http import HTTPStatus
 from io import BytesIO
 
+CACHE = os.path.expanduser('~/.ipfsserver/cache')
+
 class IPFSRequestHandler(http.server.SimpleHTTPRequestHandler):
     '''
     Extend request handler to fetch IPFS documents
@@ -14,7 +16,9 @@ class IPFSRequestHandler(http.server.SimpleHTTPRequestHandler):
         '''
         Initialize class
         '''
-        super(IPFSRequestHandler, self).__init__(*args, **kwargs)
+        os.makedirs(CACHE, exist_ok=True)
+        kwargs['directory'] = CACHE
+        super().__init__(*args, **kwargs)
 
     def do_GET(self, head_only=False):
         '''
@@ -38,4 +42,6 @@ class IPFSRequestHandler(http.server.SimpleHTTPRequestHandler):
         return do_GET(self, head_only=True)
 
 if __name__ == '__main__':
-    http.server.test(HandlerClass=IPFSRequestHandler, port=8088)
+    http.server.test(
+        HandlerClass=IPFSRequestHandler,
+        port=8088)

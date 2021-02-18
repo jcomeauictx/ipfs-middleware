@@ -26,7 +26,6 @@ class IPFSRequestHandler(SimpleHTTPRequestHandler):
         super().__init__(*args, **kwargs)
         # make text/plain the default
         self.extensions_map[''] = 'text/plain'
-        #SimpleHTTPRequestHandler.extensions_map[''] = 'text/plain'
 
     def do_GET(self, head_only=False):
         '''

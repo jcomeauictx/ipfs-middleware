@@ -25,7 +25,7 @@ class IPFSRequestHandler(SimpleHTTPRequestHandler):
         kwargs['directory'] = CACHE
         super().__init__(*args, **kwargs)
         # make text/plain the default
-        self.extensions_map[''] = 'text/plain'
+        super().extensions_map[''] = 'text/plain'
 
     def do_GET(self, head_only=False):
         '''

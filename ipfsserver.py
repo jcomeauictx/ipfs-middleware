@@ -30,7 +30,7 @@ class IPFSRequestHandler(SimpleHTTPRequestHandler):
         Fetch file before continuing
         '''
         path = self.path.lstrip(posixpath.sep)
-        fullpath = os.path.join(CACHE, path)
+        fullpath = posixpath.join(CACHE, path)
         dirname, filename = posixpath.split(fullpath)
         if not os.path.exists(fullpath):
             os.makedirs(dirname, exist_ok=True)
@@ -51,14 +51,6 @@ class IPFSRequestHandler(SimpleHTTPRequestHandler):
         Handle HEAD request
         '''
         do_GET(self, head_only=True)
-
-def run(server_class=HTTPServer, handler_class=IPFSRequestHandler):
-    '''
-    Instantiate and run server
-    '''
-    server_address = ('', PORT)
-    httpd = server_class(server_address, handler_class)
-    httpd.serve_forever()
 
 if __name__ == '__main__':
     # make text/plain the default

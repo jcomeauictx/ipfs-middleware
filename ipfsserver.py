@@ -24,8 +24,6 @@ class IPFSRequestHandler(SimpleHTTPRequestHandler):
         os.makedirs(CACHE, exist_ok=True)
         kwargs['directory'] = CACHE
         super().__init__(*args, **kwargs)
-        # make text/plain the default
-        SimpleHTTPRequestHandler.extensions_map[''] = 'text/plain'
 
     def do_GET(self, head_only=False):
         '''
@@ -60,6 +58,8 @@ def run(server_class=HTTPServer, handler_class=IPFSRequestHandler):
     '''
     server_address = ('', 8088)
     httpd = server_class(server_address, handler_class)
+    # make text/plain the default
+    SimpleHTTPRequestHandler.extensions_map[''] = 'text/plain'
     httpd.serve_forever()
 
 if __name__ == '__main__':

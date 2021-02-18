@@ -17,12 +17,16 @@ class IPFSRequestHandler(http.server.SimpleHTTPRequestHandler):
     def __init__(self, *args, **kwargs):
         '''
         Initialize class
+        
+        Note that this isn't called until the server gets the first request
         '''
+        logging.warn('initializing IPFS request handler')
         os.makedirs(CACHE, exist_ok=True)
         kwargs['directory'] = CACHE
         super().__init__(*args, **kwargs)
         # make text/plain the default
         self.extensions_map[''] = 'text/plain'
+        logging.warn('extensions_map: %s', self.extensions_map)
 
     def do_GET(self, head_only=False):
         '''

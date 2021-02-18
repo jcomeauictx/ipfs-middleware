@@ -1,4 +1,6 @@
 #!/bin/bash
+# Copyright (C) Jedri Visser
+# //medium.com/@jedri/how-to-trust-a-ca-only-for-a-specific-domain-567ab9333c9d
  
 if [ $# -ne 2 ]; then
   echo 1>&2 "Usage: $0 <domain_to_trust> <path_to_cert_to_cross_sign>"

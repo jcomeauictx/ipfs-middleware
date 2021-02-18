@@ -2,16 +2,16 @@
 '''
 Implement simple IPFS server
 '''
-import sys, os, subprocess, logging, posixpath, http.server
+import sys, os, subprocess, logging, posixpath
 from http import HTTPStatus
+from http.server import HTTPServer, SimpleHTTPRequestHandler
 from io import BytesIO
 
 logging.basicConfig(level=logging.DEBUG if __debug__ else logging.INFO)
 
 CACHE = os.path.expanduser('~/.ipfsserver/cache')
-PARENT_HANDLER = http.server.SimpleHTTPRequestHandler
 
-class IPFSRequestHandler(PARENT_HANDLER):
+class IPFSRequestHandler(SimpleHTTPRequestHandler):
     '''
     Extend request handler to fetch IPFS documents
     '''
@@ -21,12 +21,12 @@ class IPFSRequestHandler(PARENT_HANDLER):
         
         Note that this isn't called until the server gets the first request
         '''
-        logging.warn('initializing IPFS request handler')
+        logging.warning('initializing IPFS request handler')
         os.makedirs(CACHE, exist_ok=True)
         kwargs['directory'] = CACHE
         super().__init__(*args, **kwargs)
         # make text/plain the default
-        PARENT_HANDLER.extensions_map[''] = 'text/plain'
+        super().extensions_map[''] = 'text/plain'
 
     def do_GET(self, head_only=False):
         '''
@@ -55,7 +55,13 @@ class IPFSRequestHandler(PARENT_HANDLER):
         '''
         do_GET(self, head_only=True)
 
+def run(server_class=HTTPServer, handler_class=IPFSRequestHandler):
+    '''
+    Instantiate and run server
+    '''
+    server_address = ('', 8088)
+    httpd = server_class(server_address, handler_class)
+    httpd.serve_forever()
+
 if __name__ == '__main__':
-    http.server.test(
-        HandlerClass=IPFSRequestHandler,
-        port=8088)
+    run()

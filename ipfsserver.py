@@ -32,7 +32,7 @@ class IPFSRequestHandler(SimpleHTTPRequestHandler):
         path = self.path.lstrip(posixpath.sep)
         fullpath = os.path.join(CACHE, path)
         dirname, filename = posixpath.split(fullpath)
-        if not os.path.exists(path):
+        if not os.path.exists(fullpath):
             os.makedirs(dirname, exist_ok=True)
             logging.info('fetching %s', path)
             subprocess.run([

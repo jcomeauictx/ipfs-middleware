@@ -5,7 +5,6 @@ Implement simple IPFS server
 import sys, os, subprocess, logging, posixpath
 from http import HTTPStatus
 from http.server import HTTPServer, SimpleHTTPRequestHandler
-from io import BytesIO
 
 logging.basicConfig(level=logging.DEBUG if __debug__ else logging.INFO)
 
@@ -26,7 +25,8 @@ class IPFSRequestHandler(SimpleHTTPRequestHandler):
         kwargs['directory'] = CACHE
         super().__init__(*args, **kwargs)
         # make text/plain the default
-        super().extensions_map[''] = 'text/plain'
+        self.extensions_map[''] = 'text/plain'
+        #SimpleHTTPRequestHandler.extensions_map[''] = 'text/plain'
 
     def do_GET(self, head_only=False):
         '''

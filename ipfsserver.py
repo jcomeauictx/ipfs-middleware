@@ -9,8 +9,9 @@ from io import BytesIO
 logging.basicConfig(level=logging.DEBUG if __debug__ else logging.INFO)
 
 CACHE = os.path.expanduser('~/.ipfsserver/cache')
+PARENT_HANDLER = http.server.SimpleHTTPRequestHandler
 
-class IPFSRequestHandler(http.server.SimpleHTTPRequestHandler):
+class IPFSRequestHandler(PARENT_HANDLER):
     '''
     Extend request handler to fetch IPFS documents
     '''
@@ -25,8 +26,7 @@ class IPFSRequestHandler(http.server.SimpleHTTPRequestHandler):
         kwargs['directory'] = CACHE
         super().__init__(*args, **kwargs)
         # make text/plain the default
-        self.extensions_map[''] = 'text/plain'
-        logging.warn('extensions_map: %s', self.extensions_map)
+        PARENT_HANDLER.extensions_map[''] = 'text/plain'
 
     def do_GET(self, head_only=False):
         '''

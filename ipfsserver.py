@@ -2,7 +2,7 @@
 '''
 Implement simple IPFS server
 '''
-import sys, os, subprocess, logging, http.server
+import sys, os, subprocess, logging, posixpath, http.server
 from http import HTTPStatus
 from io import BytesIO
 
@@ -26,14 +26,16 @@ class IPFSRequestHandler(http.server.SimpleHTTPRequestHandler):
         '''
         Fetch file before continuing
         '''
-        path = self.path.lstrip('/')
+        path = self.path.lstrip(posixpath.sep)
         fullpath = os.path.join(CACHE, path)
+        dirname, filename = posixpath.split(fullpath)
         if not os.path.exists(path):
+            os.makedirs(dirname, exist_ok=True)
             logging.info('fetching %s', path)
             subprocess.run([
                 'ipfs',
                 'get',
-                '--output={CACHE}'.format(CACHE=CACHE),
+                '--output={dirname}'.format(dirname=dirname),
                 path,
             ])
         if head_only:
